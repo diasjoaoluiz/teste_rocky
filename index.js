@@ -1,40 +1,8 @@
 const fs = require('fs');
 const mysql = require('mysql');
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234@@alexandre',
-    database: 'praticaJoao'
-});
-
-connection.connect((err) => {
-    if (err) {
-        console.error('Erro ao conectar ao banco de dados: ' + err.stack);
-        return;
-    }
-    console.log('Conexão bem sucedida com o banco de dados!');
-});
-
-const tableName = 'relatVendas';
-
-const createTableQuery = `CREATE TABLE ${tableName} (
-  id INT(11) NOT NULL AUTO_INCREMENT,
-  nome VARCHAR(255) NOT NULL,
-  idade INT(11) NOT NULL,
-  PRIMARY KEY (id)
-);`;
-
-connection.query(createTableQuery, (error, results, fields) => {
-  if (error) throw error;
-  console.log('Tabela criada com sucesso!');
-});
 
 
-/*connection.query('SELECT * FROM usuarios', (err, results, fields) => {
-    if (err) throw err;
-    console.log(results);
-});*/
 
 
 
@@ -95,5 +63,36 @@ const repairedData2 = fixData ('broken_database_2.json');
 
 exportFiles('saida1.json', repairedData1);
 exportFiles('saida2.json', repairedData2);
+
+const data = require('./saida1.json');
+
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '1234@@alexandre',
+    database: 'testeRocky'
+});
+
+connection.connect((err) => {
+    if (err) {
+        console.error('Erro ao conectar ao banco de dados: ' + err.stack);
+        return;
+    }
+    console.log('Conexão bem sucedida com o banco de dados!');
+});
+
+
+data.forEach((objeto) => {
+    connection.query(
+    'INSERT INTO vendas (data, id_marca_, vendas, valor_do_veiculo, nome) VALUES (?, ?, ?, ?, ?)',
+    [objeto.data, objeto.id_marca_, objeto.vendas, objeto.valor_do_veiculo, objeto.nome],
+    (error, result) => {
+        if (error) throw error;
+        console.log('Dados inseridos com sucesso!');
+    }
+    );
+});
+
 
 
