@@ -1,0 +1,55 @@
+--Criar tabela
+CREATE TABLE vendas_carros (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nome_fabricante varchar(255),
+  data DATE,
+  id_marca INT,
+  vendas INT,
+  valor_do_veiculo DECIMAL(10, 2),
+  nome VARCHAR(255)
+);
+
+--Inserir dados do arquivo JSON fi
+INSERT INTO vendas_carros (data, id_marca, vendas, valor_do_veiculo, nome)
+SELECT c1, c2, c3, c4, c5
+FROM fixed_database_1;
+
+
+UPDATE vendas_carros
+SET nome_fabricante = (
+    SELECT c2
+    FROM fixed_database_2
+    WHERE vendas_carros.id_marca = fixed_database_2.c1
+);
+
+--Qual marca teve o maior volume de vendas
+SELECT nome_fabricante, SUM(vendas) as total_vendas
+FROM vendas_carros
+GROUP BY nome_fabricante
+ORDER BY vendas DESC
+LIMIT 1;
+
+--Qual veículo gerou a maior e menor receita
+
+--Maior receita
+SELECT nome_fabricante, SUM(valor_do_veiculo) AS receita_somada
+FROM vendas_carros
+GROUP BY nome_fabricante
+ORDER BY receita_somada DESC
+LIMIT 1;
+
+--Menor receita
+SELECT nome_fabricante, SUM(valor_do_veiculo) AS receita_somada
+FROM vendas_carros
+GROUP BY nome_fabricante
+ORDER BY receita_somada ASC
+LIMIT 1;
+
+
+
+
+
+
+
+
+SELECT * FROM vendas_carros;

@@ -4,11 +4,6 @@ const mysql = require('mysql');
 
 
 
-
-
-
-
-
 // Função que troca os caracters corrompidos
 
 function changCaracters (data) {
@@ -38,13 +33,17 @@ function changType(data) {
 return data;
 }
 
+/* 
+    Função que realiza a leitura e chama as funções de correção 
+    changCaracters e changType 
+*/
 
 function fixData(filePath) {
 
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    const dataCorrigida = changCaracters(data);
-    const dataCorrigidaVendas = changType(dataCorrigida);
-    return dataCorrigidaVendas;
+    const dataFixed = changCaracters(data);
+    const dataFixedsales = changType(dataFixed);
+    return dataFixedsales;
 }
 
 // Função que converte e exporta os arquivos corrigidos
@@ -61,10 +60,11 @@ const repairedData2 = fixData ('broken_database_2.json');
 
 // Chamada das funções que exporta os arquivos corrigidos 
 
-exportFiles('saida1.json', repairedData1);
-exportFiles('saida2.json', repairedData2);
+exportFiles('fixed_database_1.json', repairedData1);
+exportFiles('fixed_database_2.json', repairedData2);
 
-const data = require('./saida1.json');
+/*
+const data = require('./fixed_broken_database_1.json');
 
 
 const connection = mysql.createConnection({
@@ -93,6 +93,4 @@ data.forEach((objeto) => {
     }
     );
 });
-
-
-
+*/
