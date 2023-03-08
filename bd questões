@@ -22,34 +22,51 @@ SET nome_fabricante = (
     WHERE vendas_carros.id_marca = fixed_database_2.c1
 );
 
---Qual marca teve o maior volume de vendas
-SELECT nome_fabricante, SUM(vendas) as total_vendas
+--Qual marca teve o maior volume de vendas?
+SELECT nome_fabricante, SUM(vendas) AS volume_de_vendas
 FROM vendas_carros
 GROUP BY nome_fabricante
-ORDER BY vendas DESC
+ORDER BY volume_de_vendas DESC
 LIMIT 1;
 
---Qual veículo gerou a maior e menor receita
+
+--Qual veículo gerou a maior e menor receita?
 
 --Maior receita
-SELECT nome_fabricante, SUM(valor_do_veiculo) AS receita_somada
+SELECT nome, SUM(vendas * valor_do_veiculo) as receita
 FROM vendas_carros
-GROUP BY nome_fabricante
-ORDER BY receita_somada DESC
+GROUP BY nome
+ORDER BY receita DESC
 LIMIT 1;
+
 
 --Menor receita
-SELECT nome_fabricante, SUM(valor_do_veiculo) AS receita_somada
+SELECT nome, SUM(vendas * valor_do_veiculo) as receita
 FROM vendas_carros
-GROUP BY nome_fabricante
-ORDER BY receita_somada ASC
+GROUP BY nome
+ORDER BY receita ASC
 LIMIT 1;
 
+--Qual a média de vendas do ano por marca?
+SELECT nome_fabricante, strftime('%Y', data) as ano, ROUND(AVG(vendas), 2) as media_vendas
+FROM vendas_carros
+GROUP BY nome_fabricante, ano
 
+--Quais marcas geraram uma receita maior com número menor de vendas?
+SELECT nome_fabricante, SUM(vendas * valor_do_veiculo) AS receita_total, SUM(vendas) AS total_de_vendas
+FROM vendas_carros
+GROUP BY nome_fabricante
+ORDER BY receita_total DESC
 
+--Existe alguma relação entre os veículos mais vendidos?
+SELECT nome_fabricante, nome, SUM(vendas) as total_vendas
+FROM vendas_carros
+GROUP BY nome_fabricante, nome
+ORDER BY total_vendas DESC
+LIMIT 10;
 
-
-
+/* Os três veiculos mais vendidos no ano de 2022 segundo a consulta acima possuem algumas caracteristicas em comum, ambos os carros podem ser classificados como de entrada, ou seja, carros mais urbanos, com motores não tão potentes com o intuito de serem mais economicos, esses fatos são refelxos do seu preço, custando em média ** mil reais. 
+*/
 
 
 SELECT * FROM vendas_carros;
