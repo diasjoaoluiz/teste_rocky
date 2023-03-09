@@ -9,7 +9,7 @@ CREATE TABLE vendas_carros (
   nome VARCHAR(255)
 );
 
---Inserir dados do arquivo JSON fi
+--Inserir dados dos arquivos JSON
 INSERT INTO vendas_carros (data, id_marca, vendas, valor_do_veiculo, nome)
 SELECT c1, c2, c3, c4, c5
 FROM fixed_database_1;
@@ -37,7 +37,7 @@ SELECT nome, SUM(vendas * valor_do_veiculo) as receita
 FROM vendas_carros
 GROUP BY nome
 ORDER BY receita DESC
-LIMIT 1;
+LIMIT 3;
 
 
 --Menor receita
@@ -45,12 +45,13 @@ SELECT nome, SUM(vendas * valor_do_veiculo) as receita
 FROM vendas_carros
 GROUP BY nome
 ORDER BY receita ASC
-LIMIT 1;
+LIMIT 3;
 
 --Qual a média de vendas do ano por marca?
-SELECT nome_fabricante, strftime('%Y', data) as ano, ROUND(AVG(vendas), 2) as media_vendas
+SELECT nome_fabricante, ROUND(AVG(vendas), 2) AS media_vendas
 FROM vendas_carros
-GROUP BY nome_fabricante, ano
+GROUP BY nome_fabricante;
+
 
 --Quais marcas geraram uma receita maior com número menor de vendas?
 SELECT nome_fabricante, SUM(vendas * valor_do_veiculo) AS receita_total, SUM(vendas) AS total_de_vendas
